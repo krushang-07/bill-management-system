@@ -33,22 +33,49 @@ export default function Stock() {
   })
   const [showAddForm, setShowAddForm] = useState(false)
 
+  // ---------------- FETCH HELPERS ----------------
+
+  const fetchStock = () =>
+    supabase.from('stock').select('*, categories(name)')
+
+  const fetchCategories = () =>
+    supabase.from('categories').select('*')
+
   const loadStock = async () => {
-    const { data } = await supabase
-      .from('stock')
-      .select('*, categories(name)')
+    const { data } = await fetchStock()
     setItems(data || [])
   }
 
   const loadCategories = async () => {
-    const { data } = await supabase.from('categories').select('*')
+    const { data } = await fetchCategories()
     setCategories(data || [])
   }
 
+  // ---------------- INITIAL LOAD (FIXED) ----------------
+
   useEffect(() => {
-    loadStock()
-    loadCategories()
+    let isMounted = true
+
+    const init = async () => {
+      const [stockRes, categoryRes] = await Promise.all([
+        fetchStock(),
+        fetchCategories()
+      ])
+
+      if (!isMounted) return
+
+      setItems(stockRes.data || [])
+      setCategories(categoryRes.data || [])
+    }
+
+    init()
+
+    return () => {
+      isMounted = false
+    }
   }, [])
+
+  // ---------------- ACTIONS ----------------
 
   const addItem = async () => {
     if (!name || !price || !qty || !categoryId) return
@@ -67,6 +94,7 @@ export default function Stock() {
     setPrice('')
     setQty('')
     setShowAddForm(false)
+
     loadStock()
   }
 
@@ -96,6 +124,8 @@ export default function Stock() {
     loadStock()
   }
 
+  // ---------------- DERIVED DATA ----------------
+
   const filteredItems = items.filter(item =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
@@ -113,6 +143,8 @@ export default function Stock() {
       currency: 'INR',
       maximumFractionDigits: 0
     }).format(amount)
+
+  // ---------------- UI ----------------
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -154,7 +186,9 @@ export default function Stock() {
               </div>
               <span className="text-sm font-medium text-slate-500">Value</span>
             </div>
-            <p className="text-3xl font-bold text-slate-900">{formatCurrency(totalValue)}</p>
+            <p className="text-3xl font-bold text-slate-900">
+              {formatCurrency(totalValue)}
+            </p>
           </div>
 
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
