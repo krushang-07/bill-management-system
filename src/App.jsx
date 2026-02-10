@@ -1,7 +1,3 @@
-
-
-
-
 import { BrowserRouter, Routes, Route, Link, useLocation, Navigate } from "react-router-dom";
 import { Receipt, Package, BarChart3, Menu, X, LogOut, User, Key } from "lucide-react";
 import { useState, useEffect } from "react";

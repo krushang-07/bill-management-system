@@ -81,8 +81,8 @@ export default function Bill() {
 
     if (!seller) return alert("Please enter seller name");
     if (cart.length === 0) return alert("Cart is empty");
-    if (cashAmt + upiAmt !== total)
-      return alert("Cash + UPI must equal Total amount");
+    // if (cashAmt + upiAmt !== total)
+    //   return alert("Cash + UPI must equal Total amount");
 
     try {
       const { data: bill } = await supabase
@@ -142,59 +142,57 @@ export default function Bill() {
       <div className="print:hidden min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-pink-50 p-6">
         <div className="max-w-6xl mx-auto">
 
-                  {/* HEADER unchanged */}
-                  
-                  <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-3 bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 rounded-xl shadow-lg shadow-indigo-200">
-              <Receipt className="w-7 h-7 text-white" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900">
-                Bill Management
-              </h1>
-              <p className="text-slate-500 text-sm mt-1">
-                Create and print your bills
-              </p>
+          {/* HEADER */}
+          <div className="mb-8">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-3 bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 rounded-xl shadow-lg shadow-indigo-200">
+                <Receipt className="w-7 h-7 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-slate-900">
+                  Bill Management
+                </h1>
+                <p className="text-slate-500 text-sm mt-1">
+                  Create and print your bills
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
           <div className="grid lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
 
-                          {/* CUSTOMER INFO unchanged */}
-                          
-                          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200">
-  <h2 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-    <User className="w-5 h-5 text-purple-600" />
-    Customer Information
-  </h2>
-  <div className="grid md:grid-cols-2 gap-4">
-    <div className="relative">
-      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-      <input
-        type="text"
-        placeholder="Seller Name *"
-        value={seller}
-        onChange={(e) => setSeller(e.target.value)}
-        className="w-full pl-11 pr-4 py-3 rounded-lg border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
-      />
-    </div>
-    <div className="relative">
-      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-      <input
-        type="text"
-        placeholder="Contact Number (Optional)"
-        value={contact}
-        onChange={(e) => setContact(e.target.value)}
-        className="w-full pl-11 pr-4 py-3 rounded-lg border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
-      />
-    </div>
-  </div>
-</div>
+              {/* CUSTOMER INFO */}
+              <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200">
+                <h2 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                  <User className="w-5 h-5 text-purple-600" />
+                  Customer Information
+                </h2>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <input
+                      type="text"
+                      placeholder="Seller Name *"
+                      value={seller}
+                      onChange={(e) => setSeller(e.target.value)}
+                      className="w-full pl-11 pr-4 py-3 rounded-lg border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
+                    />
+                  </div>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <input
+                      type="text"
+                      placeholder="Contact Number (Optional)"
+                      value={contact}
+                      onChange={(e) => setContact(e.target.value)}
+                      className="w-full pl-11 pr-4 py-3 rounded-lg border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
+                    />
+                  </div>
+                </div>
+              </div>
 
-              {/* CATEGORY FILTER (LOGIC ONLY ADDITION) */}
+              {/* CATEGORY FILTER */}
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200">
                 <label className="block text-sm font-semibold text-slate-700 mb-2">
                   Category
@@ -237,8 +235,8 @@ export default function Bill() {
                           <Package className="w-6 h-6 text-white" />
                         </div>
                         <p className="font-semibold text-slate-900">
-  {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
-</p>
+                          {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+                        </p>
                         <p className={`text-xs mt-1 ${item.quantity < 5 ? 'text-red-500 font-semibold' : 'text-slate-500'}`}>
                           Stock: {item.quantity}
                         </p>
@@ -319,47 +317,6 @@ export default function Bill() {
                 {/* PAYMENT SECTION */}
                 {cart.length > 0 && (
                   <div className="p-6 border-t border-slate-200 bg-gradient-to-br from-slate-50 to-purple-50">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-lg font-semibold text-slate-700">Total Amount</span>
-                      <span className="text-3xl font-bold text-purple-600">
-                        {formatCurrency(total)}
-                      </span>
-                    </div>
-
-                    {/* PAYMENT INPUTS */}
-                    <div className="space-y-3">
-                      <div className="relative">
-                        <Wallet className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-                        <input
-                          type="number"
-                          placeholder="Cash Amount"
-                          value={cash}
-                          onChange={(e) => setCash(e.target.value)}
-                          className="w-full pl-11 pr-4 py-3 rounded-lg border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
-                        />
-                      </div>
-                      {/* <div className="relative">
-                        <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-                        <input
-                          type="number"
-                          placeholder="UPI Amount"
-                          value={upi}
-                          onChange={(e) => setUpi(e.target.value)}
-                          className="w-full pl-11 pr-4 py-3 rounded-lg border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
-                        />
-                      </div> */}
-
-                      {/* Payment Status */}
-                      {(cash || upi) && (
-                        <div className={`p-3 rounded-lg ${remaining === 0 ? 'bg-emerald-50 border border-emerald-200' : 'bg-amber-50 border border-amber-200'}`}>
-                          <p className={`text-sm font-medium ${remaining === 0 ? 'text-emerald-700' : 'text-amber-700'}`}>
-                            {remaining === 0 ? '✓ Payment Complete' : remaining > 0 ? `Remaining: ${formatCurrency(remaining)}` : `Excess: ${formatCurrency(Math.abs(remaining))}`}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* SAVE & PRINT BUTTON */}
                     <div className="mt-4">
                       <button
                         onClick={saveBill}
@@ -377,167 +334,262 @@ export default function Bill() {
         </div>
       </div>
 
-      {/* PRINT BILL - Only visible during print */}
-     {/* PRINT BILL - Only visible during print */}
-{lastBill && (
-  <>
-    <style>{`
-      @media print {
-        @page {
-          size: auto;
-          margin: 0;
-        }
-        body * {
-          visibility: hidden;
-        }
-        #print-bill, #print-bill * {
-          visibility: visible;
-        }
-        #print-bill {
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
-          display: flex;
-          justify-content: space-between;
-          gap: 12px;
-        }
-        .single-bill {
-          width: calc(50% - 6px);
-          box-sizing: border-box;
-        }
-      }
-    `}</style>
+      {/* PRINT BILL - Top and Bottom layout for A4 */}
+      {lastBill && (
+        <>
+          <style>{`
+            @media print {
+              @page {
+                size: A4 portrait;
+                margin: 0;
+              }
+              body * {
+                visibility: hidden;
+              }
+              #print-bill, #print-bill * {
+                visibility: visible;
+              }
+              #print-bill {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 210mm;
+                height: 297mm;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+              }
+              .single-bill {
+                width: 100%;
+                height: calc(50% - 10mm);
+                box-sizing: border-box;
+                page-break-inside: avoid;
+              }
+              .single-bill:first-child {
+                margin-bottom: 20mm;
+                border-bottom: 2px dashed #000;
+                padding-bottom: 10mm;
+              }
+            }
+          `}</style>
 
-    <div id="print-bill" className="hidden print:flex">
-      {[0, 1].map((copy) => (
-        <div
-          key={copy}
-          className="single-bill"
-          style={{ 
-            padding: '12px',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-            fontSize: '13px',
-            lineHeight: '1.4',
-            color: '#000',
-            border: '1px dashed #000'
-          }}
-        >
-          {/* Header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', width: '100%' }}>
-  {/* Logo on the left */}
-  <div>
-    <img 
-      src="/logo.jpg" 
-      alt="Logo" 
-      style={{ width: '100px', height: 'auto', borderRadius: '8px' }} 
-    />
-  </div>
+          <div id="print-bill" className="hidden print:flex">
+            {[0, 1].map((copy) => (
+              <div
+                key={copy}
+                className="single-bill"
+                style={{ 
+                  padding: '15mm 10mm',
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                  fontSize: '13px',
+                  lineHeight: '1.5',
+                  color: '#000',
+                }}
+              >
+                {/* Header */}
+                <div style={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center', 
+                  marginBottom: '20px', 
+                  width: '100%' 
+                }}>
+                  {/* Logo on the left */}
+                  <div>
+                    <img 
+                      src="/logo.jpg" 
+                      alt="Logo" 
+                      style={{ 
+                        width: '100px', 
+                        height: 'auto', 
+                        borderRadius: '8px' 
+                      }} 
+                    />
+                  </div>
 
-  {/* Invoice title & contact on the right */}
-  <div style={{ textAlign: 'right' }}>
-    <h1 style={{ fontSize: '24px', fontWeight: '700', margin: '0 0 4px 0', letterSpacing: '0.5px' }}>
-      INVOICE
-    </h1>
-    {lastBill.contact && (
-      <p style={{ fontSize: '12px', margin: '0', color: '#444' }}>
-        {lastBill.contact}
-      </p>
-    )}
-  </div>
-</div>
-
-
-          {/* Bill Info */}
-          <div style={{ marginBottom: '12px' }}>
-            <table style={{ width: '100%', fontSize: '12px' }}>
-              <tbody>
-                <tr>
-                  <td style={{ padding: '3px 0', fontWeight: '600' }}>Bill No:</td>
-                  <td style={{ padding: '3px 0', textAlign: 'right' }}>#{lastBill.bill.id}</td>
-                </tr>
-                <tr>
-                  <td style={{ padding: '3px 0', fontWeight: '600' }}>Date:</td>
-                  <td style={{ padding: '3px 0', textAlign: 'right' }}>
-                    {new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ padding: '3px 0', fontWeight: '600' }}>Time:</td>
-                  <td style={{ padding: '3px 0', textAlign: 'right' }}>
-                    {new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })}
-                  </td>
-                </tr>
-                {lastBill.seller && (
-                  <tr>
-                    <td style={{ padding: '3px 0', fontWeight: '600' }}>Seller:</td>
-                    <td style={{ padding: '3px 0', textAlign: 'right' }}>{lastBill.seller}</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Items */}
-          <div style={{ marginBottom: '12px' }}>
-            <table style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid #000', fontWeight: '700' }}>
-                  <th style={{ textAlign: 'left', padding: '6px 0', fontSize: '11px' }}>Item</th>
-                  <th style={{ textAlign: 'center', padding: '6px 4px', fontSize: '11px' }}>Qty</th>
-                  <th style={{ textAlign: 'right', padding: '6px 0', fontSize: '11px' }}>Rate</th>
-                  <th style={{ textAlign: 'right', padding: '6px 0', fontSize: '11px' }}>Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {lastBill.items.map((item, idx) => (
-                  <tr key={idx}>
-                    <td style={{ padding: '6px 0', borderBottom: idx === lastBill.items.length - 1 ? 'none' : '1px dotted #ccc' }}>{item.name}</td>
-                    <td style={{ textAlign: 'center', padding: '6px 4px', borderBottom: idx === lastBill.items.length - 1 ? 'none' : '1px dotted #ccc' }}>{item.qty}</td>
-                    <td style={{ textAlign: 'right', padding: '6px 0', borderBottom: idx === lastBill.items.length - 1 ? 'none' : '1px dotted #ccc' }}>₹{item.price.toFixed(2)}</td>
-                    <td style={{ textAlign: 'right', padding: '6px 0', fontWeight: '600', borderBottom: idx === lastBill.items.length - 1 ? 'none' : '1px dotted #ccc' }}>₹{(item.qty * item.price).toFixed(2)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Total */}
-          <div style={{ marginBottom: '12px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '18px', fontWeight: '700', padding: '6px 0', marginBottom: '8px' }}>
-              <span>TOTAL</span>
-              <span>₹{lastBill.bill.total.toFixed(2)}</span>
-            </div>
-            <div style={{ fontSize: '12px', borderTop: '1px dashed #666', paddingTop: '8px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '2px 0' }}>
-                <span>Cash Paid:</span>
-                <span style={{ fontWeight: '600' }}>₹{lastBill.bill.cash.toFixed(2)}</span>
-              </div>
-              {lastBill.bill.upi > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '2px 0' }}>
-                  <span>UPI Paid:</span>
-                  <span style={{ fontWeight: '600' }}>₹{lastBill.bill.upi.toFixed(2)}</span>
+                  {/* Invoice title & contact on the right */}
+                  <div style={{ textAlign: 'right' }}>
+                    <h1 style={{ 
+                      fontSize: '28px', 
+                      fontWeight: '700', 
+                      margin: '0 0 6px 0', 
+                      letterSpacing: '0.5px' 
+                    }}>
+                      INVOICE
+                    </h1>
+                    {lastBill.contact && (
+                      <p style={{ 
+                        fontSize: '13px', 
+                        margin: '0', 
+                        color: '#444' 
+                      }}>
+                        {lastBill.contact}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              )}
-            </div>
-          </div>
 
-          {/* Footer */}
-          <div style={{ textAlign: 'center', marginTop: '16px' }}>
-            <p style={{ fontSize: '16px', fontWeight: '700', margin: '0 0 8px 0', letterSpacing: '0.5px' }}>
-              Thank You! 🍦
-            </p>
-            <p style={{ fontSize: '11px', margin: '4px 0', color: '#666' }}>Visit Again</p>
-            <p style={{ fontSize: '10px', margin: '12px 0 0 0', fontWeight: '700', letterSpacing: '1px' }}>
-              {copy === 0 ? '*** CUSTOMER COPY ***' : '*** SELLER COPY ***'}
-            </p>
-          </div>
-        </div>
-      ))}
-    </div>
-  </>
-)}
+                {/* Bill Info */}
+                <div style={{ marginBottom: '16px' }}>
+                  <table style={{ width: '100%', fontSize: '13px' }}>
+                    <tbody>
+                      <tr>
+                        <td style={{ padding: '4px 0', fontWeight: '600' }}>Bill No:</td>
+                        <td style={{ padding: '4px 0', textAlign: 'right' }}>#{lastBill.bill.id}</td>
+                      </tr>
+                      <tr>
+                        <td style={{ padding: '4px 0', fontWeight: '600' }}>Date:</td>
+                        <td style={{ padding: '4px 0', textAlign: 'right' }}>
+                          {new Date().toLocaleDateString('en-IN', { 
+                            day: '2-digit', 
+                            month: 'short', 
+                            year: 'numeric' 
+                          })}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ padding: '4px 0', fontWeight: '600' }}>Time:</td>
+                        <td style={{ padding: '4px 0', textAlign: 'right' }}>
+                          {new Date().toLocaleTimeString('en-IN', { 
+                            hour: '2-digit', 
+                            minute: '2-digit', 
+                            hour12: true 
+                          })}
+                        </td>
+                      </tr>
+                      {lastBill.seller && (
+                        <tr>
+                          <td style={{ padding: '4px 0', fontWeight: '600' }}>Seller:</td>
+                          <td style={{ padding: '4px 0', textAlign: 'right' }}>{lastBill.seller}</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
 
+                {/* Items */}
+                <div style={{ marginBottom: '16px' }}>
+                  <table style={{ 
+                    width: '100%', 
+                    fontSize: '13px', 
+                    borderCollapse: 'collapse' 
+                  }}>
+                    <thead>
+                      <tr style={{ 
+                        borderBottom: '2px solid #000', 
+                        fontWeight: '700' 
+                      }}>
+                        <th style={{ 
+                          textAlign: 'left', 
+                          padding: '8px 0', 
+                          fontSize: '12px' 
+                        }}>Item</th>
+                        <th style={{ 
+                          textAlign: 'center', 
+                          padding: '8px 4px', 
+                          fontSize: '12px' 
+                        }}>Qty</th>
+                        <th style={{ 
+                          textAlign: 'right', 
+                          padding: '8px 0', 
+                          fontSize: '12px' 
+                        }}>Rate</th>
+                        <th style={{ 
+                          textAlign: 'right', 
+                          padding: '8px 0', 
+                          fontSize: '12px' 
+                        }}>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {lastBill.items.map((item, idx) => (
+                        <tr key={idx}>
+                          <td style={{ 
+                            padding: '8px 0', 
+                            borderBottom: idx === lastBill.items.length - 1 
+                              ? 'none' 
+                              : '1px dotted #ccc' 
+                          }}>
+                            {item.name}
+                          </td>
+                          <td style={{ 
+                            textAlign: 'center', 
+                            padding: '8px 4px', 
+                            borderBottom: idx === lastBill.items.length - 1 
+                              ? 'none' 
+                              : '1px dotted #ccc' 
+                          }}>
+                            {item.qty}
+                          </td>
+                          <td style={{ 
+                            textAlign: 'right', 
+                            padding: '8px 0', 
+                            borderBottom: idx === lastBill.items.length - 1 
+                              ? 'none' 
+                              : '1px dotted #ccc' 
+                          }}>
+                            ₹{item.price.toFixed(2)}
+                          </td>
+                          <td style={{ 
+                            textAlign: 'right', 
+                            padding: '8px 0', 
+                            fontWeight: '600', 
+                            borderBottom: idx === lastBill.items.length - 1 
+                              ? 'none' 
+                              : '1px dotted #ccc' 
+                          }}>
+                            ₹{(item.qty * item.price).toFixed(2)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Total */}
+                <div style={{ marginBottom: '16px' }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    fontSize: '20px', 
+                    fontWeight: '700', 
+                    padding: '10px 0', 
+                    marginBottom: '10px',
+                    borderTop: '2px solid #000',
+                    borderBottom: '2px solid #000'
+                  }}>
+                    <span>TOTAL</span>
+                    <span>₹{lastBill.bill.total.toFixed(2)}</span>
+                  </div>
+                
+                </div>
+
+{/*             
+                 <div style={{ 
+                  textAlign: 'center', 
+                  marginTop: '20px',
+                  paddingTop: '15px',
+                  borderTop: '1px dashed #666'
+                }}>
+                 */}
+                
+                  <p style={{ 
+                    fontSize: '11px', 
+                    margin: '15px 0 0 0', 
+                    fontWeight: '700', 
+                    letterSpacing: '1px',
+                    padding: '5px',
+                    background: '#f0f0f0',
+                    borderRadius: '4px'
+                  }}>
+                    {copy === 0 ? '*** CUSTOMER COPY ***' : '*** SELLER COPY ***'}
+                  </p>
+                </div> 
+              // </div>
+            ))}
+          </div>
+        </>
+      )}
     </>
   );
 }
