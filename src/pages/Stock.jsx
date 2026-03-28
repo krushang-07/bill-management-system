@@ -33,7 +33,7 @@ export default function Stock() {
   })
   const [showAddForm, setShowAddForm] = useState(false)
 
-  // ---------------- FETCH HELPERS ----------------
+  // ---------------- FETCH ----------------
 
   const fetchStock = () =>
     supabase.from('stock').select('*, categories(name)')
@@ -50,8 +50,6 @@ export default function Stock() {
     const { data } = await fetchCategories()
     setCategories(data || [])
   }
-
-  // ---------------- INITIAL LOAD (FIXED) ----------------
 
   useEffect(() => {
     let isMounted = true
@@ -77,15 +75,32 @@ export default function Stock() {
 
   // ---------------- ACTIONS ----------------
 
+  // ✅ ADD ITEM + HISTORY
   const addItem = async () => {
     if (!name || !price || !qty || !categoryId) return
 
-    await supabase.from('stock').insert({
-      name,
-      variant,
-      category_id: categoryId,
-      price: Number(price),
-      quantity: Number(qty)
+    const { data, error } = await supabase
+      .from('stock')
+      .insert({
+        name,
+        variant,
+        category_id: categoryId,
+        price: Number(price),
+        quantity: Number(qty)
+      })
+      .select()
+      .single()
+
+    if (error) {
+      console.error(error)
+      return
+    }
+
+    // ✅ HISTORY LOG
+    await supabase.from('history').insert({
+      product_id: data.id,
+      change_quantity: Number(qty),
+      action: "Added"
     })
 
     setName('')
@@ -98,8 +113,21 @@ export default function Stock() {
     loadStock()
   }
 
+  // ✅ DELETE + HISTORY
   const deleteItem = async (id) => {
+    const item = items.find(i => i.id === id)
+
+    if (!item) return
+
+    // save history BEFORE delete
+    await supabase.from('history').insert({
+      product_id: id,
+      change_quantity: item.quantity,
+      action: "Deleted"
+    })
+
     await supabase.from('stock').delete().eq('id', id)
+
     loadStock()
   }
 
@@ -118,13 +146,28 @@ export default function Stock() {
     setEditingId(null)
   }
 
+  // ✅ UPDATE + HISTORY (DIFFERENCE BASED)
   const saveEdit = async (id) => {
+    const oldItem = items.find(i => i.id === id)
+    if (!oldItem) return
+
+    const difference = editForm.quantity - oldItem.quantity
+
     await supabase.from('stock').update(editForm).eq('id', id)
+
+    if (difference !== 0) {
+      await supabase.from('history').insert({
+        product_id: id,
+        change_quantity: Math.abs(difference),
+        action: difference > 0 ? "Added" : "Removed"
+      })
+    }
+
     cancelEdit()
     loadStock()
   }
 
-  // ---------------- DERIVED DATA ----------------
+  // ---------------- DERIVED ----------------
 
   const filteredItems = items.filter(item =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
